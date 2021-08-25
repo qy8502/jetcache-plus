@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.github.qy8502.jetcacheplus.MultiJetCacheProxyAutoConfiguration
+io.github.qy8502.jetcacheplus.MultiJetCacheProxyAutoConfiguration

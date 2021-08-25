@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.github.qy8502.jetcacheplus.AutoInvalidateLocalAutoConfiguration
+io.github.qy8502.jetcacheplus.AutoInvalidateLocalAutoConfiguration

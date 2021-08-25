@@ -16,7 +16,7 @@ dubbo:
     name: dubbo
     port: -1
   scan:
-    base-packages: com.github.qy8502.jetcacheplusexample
+    base-packages: io.github.qy8502.jetcacheplusexample
 
 jetcache:
   statIntervalMinutes: 5
@@ -41,8 +41,8 @@ jetcache:
 logging:
   level:
     root: WARN
-    com.github.qy8502.jetcacheplus: DEBUG
-    com.github.qy8502.jetcacheplusexample: DEBUG
+    io.github.qy8502.jetcacheplus: DEBUG
+    io.github.qy8502.jetcacheplusexample: DEBUG
 
 server:
   port: 8080

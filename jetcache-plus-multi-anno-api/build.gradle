@@ -1,3 +1,5 @@
+apply from: "$rootDir/gradle/publish.gradle"
+
 dependencies {
     implementation("com.alicp.jetcache:jetcache-anno-api:${jetcacheVersion}")
 }

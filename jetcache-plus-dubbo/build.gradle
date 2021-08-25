@@ -1,3 +1,5 @@
+apply from: "$rootDir/gradle/publish.gradle"
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-autoconfigure")
     compileOnly("org.apache.dubbo:dubbo:${dubboVersion}")

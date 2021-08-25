@@ -1,3 +1,4 @@
+apply from: "$rootDir/gradle/publish.gradle"
 dependencies {
     implementation project(':jetcache-plus-multi-anno-api')
     implementation("org.springframework.boot:spring-boot-autoconfigure")

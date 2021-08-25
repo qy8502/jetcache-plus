@@ -1,9 +1,19 @@
+![example workflow](https://github.com/qy8502/jetcache-plus/actions/workflows/main.yml/badge.svg)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.qy8502/jetcache-plus-dubbo.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/com.github.qy8502/jetcache-plus/)
+![GitHub license](https://img.shields.io/github/license/qy8502/jetcache-plus.svg?style=flat-square)
+
+# JetCache Plus
+
+---------------------------------------------
+
 # 0. 简介
 [alibaba jetcache](https://github.com/alibaba/jetcache/wiki/Home_CN) 提供了一套相对完善的java缓存方案。
 但是在分布式和微服务应用时，仍然有一些需求没有实现，包括：
 * 在使用两级缓存时不能同步失效分布式服务下的本地缓存。
 * `@Cached`注解不能提供获取多个缓存集合，而`@CacheInvalidate`和`@CacheUpdate`有multi模式却无法通过SPEL拼写集合中每个key。
 * 在使用基于dubbo的微服务框架中，服务消费者无法先调用缓存再调用RCP，以提高效率。
+
+现在通过jetcache-plus解决这些问题。
 
 
 # 1. 本地缓存自动失效
@@ -32,12 +42,13 @@ jetcache支持本地缓存和二级缓存。但是在分布式部署时，哪怕
 
 build.gradle文件引入依赖，使用 redis-lettuce 且排除 lettuce 因为其版本不支持 clientTracking。引入lettuce-core 6.x。
 ```groovy
-    implementation project(':jet-cache-common') // 未来会拆分出独立的包
+    implementation 'io.github.qy8502:jetcache-plus-auto-invalidate-local:0.0.1'
     implementation('com.alicp.jetcache:jetcache-starter-redis-lettuce:2.6.0'){
         exclude group: 'io.lettuce'
     }
     implementation 'io.lettuce:lettuce-core:6.1.4.RELEASE'
 ```
+
 
 # 2. 多个缓存注解支持
 ## 2.1. 背景
@@ -83,12 +94,12 @@ Arg:ids         Cache.getAll    InvokeMethod    Cache.putAll    Result
 build.gradle文件引入依赖，`@MultiCached`注解可能为项目接口使用，单独一个引用。<br>
 服务接口层
 ```groovy
-    implementation project(':jet-cache-anno') // 未来会拆分出独立的包
+    implementation 'io.github.qy8502:jetcache-plus-multi-anno-api:0.0.1'
     implementation 'com.alicp.jetcache:jetcache-anno:2.6.0'
 ```
 服务实现层
 ```groovy
-    implementation project(':jet-cache-common') // 未来会拆分出独立的包
+    implementation 'io.github.qy8502:jetcache-plus-multi:0.0.1'
     implementation('com.alicp.jetcache:jetcache-starter-redis-lettuce:2.6.0')
 ```
 
@@ -207,7 +218,7 @@ build.gradle文件引入依赖
 ```
 服务实现层
 ```groovy
-    implementation project(':jet-cache-common') // 未来会拆分出独立的包
+    implementation 'io.github.qy8502:jetcache-plus-dubbo:0.0.1'
     implementation('com.alicp.jetcache:jetcache-starter-redis-lettuce:2.6.0')
 ```
 
@@ -242,9 +253,9 @@ public interface SchoolService {
 ```
 
 
-##4. 例子
+# 4. 例子
 模块example-school提供dubbo服务，模块example-teacher为服务消费者，修改两个模块中`application.yml`文件的nacos连接配置和redis连接配置。
-先启动ExampleSchoolApplication端口8081，在启动ExampleTeacherApplication端口8080。体验
+先启动ExampleSchoolApplication端口8081，在启动ExampleTeacherApplication端口8080。
 
 获取单个school
 <br>[http://127.0.0.1:8081/school/S1](http://127.0.0.1:8081/school/S1)

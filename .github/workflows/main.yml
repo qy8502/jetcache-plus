@@ -1,6 +1,6 @@
 name: Publish package to the Maven Central Repository
 on:
-  release:
+  push:
     types: [created]
 jobs:
   publish:
@@ -21,6 +21,7 @@ jobs:
           base64 -d ~/.gradle/secring.gpg.base64 > ~/.gradle/secring.gpg
           cd ~/.gradle/
           echo $(pwd)
+          echo $(ll)
           echo $(cat ~/.gradle/secring.gpg.base64)
       - name: Publish package
         run: gradle publish  -Psigning.keyId=${{secrets.SIGNING_KEY_ID}} -Psigning.password=${{secrets.SIGNING_KEY_PASSWORD}} -Psigning.secretKeyRingFile=$(echo ~/.gradle/secring.gpg)

@@ -1,0 +1,9 @@
+dependencies {
+
+    implementation("org.springframework.boot:spring-boot-autoconfigure")
+    implementation("io.lettuce:lettuce-core:${lettuceVersion}")
+    implementation("com.alicp.jetcache:jetcache-anno:${jetcacheVersion}")
+    implementation("com.alicp.jetcache:jetcache-redis-lettuce:${jetcacheVersion}"){
+        exclude group: 'io.lettuce'
+    }
+}

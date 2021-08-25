@@ -1,0 +1,5 @@
+dependencies {
+    implementation("org.springframework.boot:spring-boot-autoconfigure")
+    compileOnly("org.apache.dubbo:dubbo:${dubboVersion}")
+    implementation("com.alicp.jetcache:jetcache-anno:${jetcacheVersion}")
+}

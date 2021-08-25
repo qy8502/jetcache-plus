@@ -1,0 +1,6 @@
+dependencies {
+
+    implementation project(':jetcache-plus-multi-anno-api')
+    implementation("com.alicp.jetcache:jetcache-anno-api:${jetcacheVersion}")
+
+}

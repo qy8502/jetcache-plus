@@ -1,0 +1,25 @@
+//plugins {
+//    id 'org.springframework.boot' version "${springBootVersion}"
+//}
+
+dependencies {
+
+    implementation project(':example-school-api')
+    implementation project(':example-teacher-api')
+    implementation project(':jetcache-plus-multi')
+    implementation project(':jetcache-plus-auto-invalidate-local')
+    implementation project(':jetcache-plus-dubbo')
+    implementation("io.lettuce:lettuce-core:${lettuceVersion}")
+    implementation("com.alicp.jetcache:jetcache-starter-redis-lettuce:${jetcacheVersion}"){
+        exclude group: 'io.lettuce'
+    }
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery'
+    implementation 'com.alibaba.cloud:spring-cloud-starter-dubbo'
+
+    dependencyManagement {
+        imports {
+            mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:${springCloudAlibabaVersion}"
+        }
+    }
+}

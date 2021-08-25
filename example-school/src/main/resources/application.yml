@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: jetcache-plus-example-school
+  cloud:
+    nacos:
+      discovery:
+        namespace: public
+        server-addr: http://10.0.11.66:8848
+
+dubbo:
+  cloud:
+    subscribed-services: jetcache-plus-example-school
+  protocol:
+    id: dubbo
+    name: dubbo
+    port: -1
+  scan:
+    base-packages: com.github.qy8502.jetcacheplusexample
+
+jetcache:
+  statIntervalMinutes: 5
+  areaInCacheName: false
+  local:
+    default:
+      type: caffeine
+      keyConvertor: fastjson
+  remote:
+    default:
+      type: redis.lettuce
+      keyPrefix: "cache:jetcache-plus-example:"
+      keyConvertor: fastjson
+      uri:
+        - redis://10.0.11.72:8001
+        - redis://10.0.11.72:8002
+        - redis://10.0.11.72:8003
+        - redis://10.0.11.72:8004
+        - redis://10.0.11.72:8005
+        - redis://10.0.11.72:8006
+
+logging:
+  level:
+    root: WARN
+    com.github.qy8502.jetcacheplus: DEBUG
+    com.github.qy8502.jetcacheplusexample: DEBUG
+
+server:
+  port: 8081

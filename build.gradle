@@ -1,0 +1,41 @@
+ext {
+    jetcacheVersion = "2.6.0"
+    springBootVersion = "2.4.2"
+    springCloudAlibabaVersion = "2021.1"
+    lettuceVersion = "6.1.4.RELEASE"
+    dubboVersion = "2.7.8"
+}
+
+buildscript {
+
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE"
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+
+    group = 'com.github.qy8502'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = '1.8'
+
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        mavenCentral()
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+        }
+    }
+    compileJava {
+        options.compilerArgs << '-parameters'
+    }
+}

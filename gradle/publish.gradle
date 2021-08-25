@@ -18,6 +18,22 @@ publishing {
         mavenJava(MavenPublication) {
             from components.java
             pom {
+                name = 'jetcache-plus'
+                description = 'Enhancements to JetCache'
+                url = 'https://github.com/qy8502/jetcache-plus'
+                licenses {
+                    license {
+                        name = 'Apache License 2.0'
+                        url = 'https://github.com/qy8502/jetcache-plus/blob/master/LICENSE'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'qy8502'
+                        name = 'Qu Yankai'
+                        email = 'qy8502@163.com'
+                    }
+                }
                 scm {
                     connection = 'scm:git:git@github.com:qy8502/jetcache-plus.git'
                     developerConnection = 'scm:git:ssh://github.com/qy8502/jetcache-plus.git'

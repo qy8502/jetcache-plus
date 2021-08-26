@@ -10,11 +10,19 @@
 * `@Cached`注解不能提供获取多个缓存集合，而`@CacheInvalidate`和`@CacheUpdate`有multi模式却无法通过SPEL拼写集合中每个key。
 * 在使用基于dubbo的微服务框架中，服务消费者无法先调用缓存再调用RCP，以提高效率。
 
-jetcache-plus作为jetcache的功能增强插件，提供了解决这些问题的功能。
+jetcache-plus作为jetcache的增强工具，提供了解决这些问题的方案。
+
+环境：
+* JDK1.8
+* Spring Framework  5.3.3
+* Spring Boot 2.4.2 
+* Spring Cloud Alibaba 2021.1
+* Lettuce 6.1.4.RELEASE
+* Dubbo 2.7.8
 
 ---------------------------------------------
 
-<p>
+<br>
     
 # 1. 本地缓存自动失效
 ## 1.1. 背景
@@ -42,15 +50,15 @@ jetcache支持本地缓存和二级缓存。但是在分布式部署时，哪怕
 
 build.gradle文件引入依赖，使用 redis-lettuce 且排除 lettuce 因为其版本不支持 clientTracking。引入lettuce-core 6.x。
 ```groovy
-    implementation 'io.github.qy8502:jetcache-plus-auto-invalidate-local:0.0.1'
+    implementation 'io.github.qy8502:jetcache-plus-auto-invalidate-local:0.0.2'
     implementation('com.alicp.jetcache:jetcache-starter-redis-lettuce:2.6.0'){
         exclude group: 'io.lettuce'
     }
     implementation 'io.lettuce:lettuce-core:6.1.4.RELEASE'
 ```
 
-    
-<p>
+
+<br>
 
     
 # 2. 多个缓存注解支持
@@ -97,12 +105,12 @@ Arg:ids         Cache.getAll    InvokeMethod    Cache.putAll    Result
 build.gradle文件引入依赖，`@MultiCached`注解可能为项目接口使用，单独一个引用。<br>
 服务接口层
 ```groovy
-    implementation 'io.github.qy8502:jetcache-plus-multi-anno-api:0.0.1'
+    implementation 'io.github.qy8502:jetcache-plus-multi-anno-api:0.0.2'
     implementation 'com.alicp.jetcache:jetcache-anno:2.6.0'
 ```
 服务实现层
 ```groovy
-    implementation 'io.github.qy8502:jetcache-plus-multi:0.0.1'
+    implementation 'io.github.qy8502:jetcache-plus-multi:0.0.2'
     implementation('com.alicp.jetcache:jetcache-starter-redis-lettuce:2.6.0')
 ```
 
@@ -163,7 +171,7 @@ public interface SchoolService {
 
 ```
 
-<p>
+<br>
     
 
 # 3. dubbo先缓存调用支持
@@ -223,7 +231,7 @@ build.gradle文件引入依赖
 ```
 服务实现层
 ```groovy
-    implementation 'io.github.qy8502:jetcache-plus-dubbo:0.0.1'
+    implementation 'io.github.qy8502:jetcache-plus-dubbo:0.0.2'
     implementation('com.alicp.jetcache:jetcache-starter-redis-lettuce:2.6.0')
 ```
 
@@ -257,8 +265,8 @@ public interface SchoolService {
 
 ```
 
-    
-<p>
+
+<br>
     
 
 # 4. 例子

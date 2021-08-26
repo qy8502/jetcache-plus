@@ -4,18 +4,18 @@
 
 # JetCache Plus
 
----------------------------------------------
-
-# 0. 简介
 [alibaba jetcache](https://github.com/alibaba/jetcache/wiki/Home_CN) 提供了一套相对完善的java缓存方案。
 但是在分布式和微服务应用时，仍然有一些需求没有实现，包括：
 * 在使用两级缓存时不能同步失效分布式服务下的本地缓存。
 * `@Cached`注解不能提供获取多个缓存集合，而`@CacheInvalidate`和`@CacheUpdate`有multi模式却无法通过SPEL拼写集合中每个key。
 * 在使用基于dubbo的微服务框架中，服务消费者无法先调用缓存再调用RCP，以提高效率。
 
-现在通过jetcache-plus解决这些问题。
+jetcache-plus作为jetcache的功能增强插件，提供了解决这些问题的功能。
 
+---------------------------------------------
 
+<p>
+    
 # 1. 本地缓存自动失效
 ## 1.1. 背景
 jetcache支持本地缓存和二级缓存。但是在分布式部署时，哪怕本地缓存设置过去时间很短，一样会存在数据是过时或者不同节点数据不一致的情况。如果本地缓存可以和redis分布式缓存同步失效，将可以极大提高本地缓存的应用效果。
@@ -49,7 +49,10 @@ build.gradle文件引入依赖，使用 redis-lettuce 且排除 lettuce 因为�
     implementation 'io.lettuce:lettuce-core:6.1.4.RELEASE'
 ```
 
+    
+<p>
 
+    
 # 2. 多个缓存注解支持
 ## 2.1. 背景
 jetcache 提供的CacheAPI中是支持`putAll`和`getAll`处理多个缓存的。这在使用redis缓存时可以有效的减少请求数量。
@@ -160,6 +163,8 @@ public interface SchoolService {
 
 ```
 
+<p>
+    
 
 # 3. dubbo先缓存调用支持
 ## 3.1. 背景
@@ -252,6 +257,9 @@ public interface SchoolService {
 
 ```
 
+    
+<p>
+    
 
 # 4. 例子
 模块example-school提供dubbo服务，模块example-teacher为服务消费者，修改两个模块中`application.yml`文件的nacos连接配置和redis连接配置。

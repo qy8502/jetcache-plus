@@ -50,7 +50,7 @@ jetcache支持本地缓存和二级缓存。但是在分布式部署时，哪怕
 
 build.gradle文件引入依赖，使用 redis-lettuce 且排除 lettuce 因为其版本不支持 clientTracking。引入lettuce-core 6.x。
 ```groovy
-    implementation 'io.github.qy8502:jetcache-plus-auto-invalidate-local:0.0.2'
+    implementation 'io.github.qy8502:jetcache-plus-auto-invalidate-local:0.0.3'
     implementation('com.alicp.jetcache:jetcache-starter-redis-lettuce:2.6.0'){
         exclude group: 'io.lettuce'
     }
@@ -105,12 +105,12 @@ Arg:ids         Cache.getAll    InvokeMethod    Cache.putAll    Result
 build.gradle文件引入依赖，`@MultiCached`注解可能为项目接口使用，单独一个引用。<br>
 服务接口层
 ```groovy
-    implementation 'io.github.qy8502:jetcache-plus-multi-anno-api:0.0.2'
+    implementation 'io.github.qy8502:jetcache-plus-multi-anno-api:0.0.3'
     implementation 'com.alicp.jetcache:jetcache-anno:2.6.0'
 ```
 服务实现层
 ```groovy
-    implementation 'io.github.qy8502:jetcache-plus-multi:0.0.2'
+    implementation 'io.github.qy8502:jetcache-plus-multi:0.0.3'
     implementation('com.alicp.jetcache:jetcache-starter-redis-lettuce:2.6.0')
 ```
 
@@ -231,7 +231,7 @@ build.gradle文件引入依赖
 ```
 服务实现层
 ```groovy
-    implementation 'io.github.qy8502:jetcache-plus-dubbo:0.0.2'
+    implementation 'io.github.qy8502:jetcache-plus-dubbo:0.0.3'
     implementation('com.alicp.jetcache:jetcache-starter-redis-lettuce:2.6.0')
 ```
 

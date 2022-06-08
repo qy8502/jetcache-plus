@@ -269,7 +269,7 @@ public interface SchoolService {
 
 <br>
 
-# 4. 本地缓存自动失效
+# 4. jackson序列化器
 ## 4.1. 背景
 jetcache原来支持fastjson序列化器，后因为某些原因去掉了。但是将缓存已JSON格式存储，方便阅读以及跨平台获取的需求仍然存在。所以需要开发一个基于jackson的序列化器，实现这个需求。
 

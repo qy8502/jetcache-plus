@@ -1,0 +1,7 @@
+apply from: "$rootDir/gradle/publish.gradle"
+dependencies {
+    implementation("org.springframework.boot:spring-boot-autoconfigure")
+    implementation("com.alicp.jetcache:jetcache-anno:${jetcacheVersion}")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}")
+
+}

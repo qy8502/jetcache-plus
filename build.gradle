@@ -1,5 +1,6 @@
 ext {
-    jetcacheVersion = "2.6.0"
+    jetcacheVersion = "2.6.5"
+    jacksonVersion = "2.13.3"
     springBootVersion = "2.4.2"
     springCloudAlibabaVersion = "2021.1"
     lettuceVersion = "6.1.4.RELEASE"
@@ -23,7 +24,7 @@ subprojects {
 
     group = 'io.github.qy8502'
     //version = '0.0.2-SNAPSHOT'
-    version = '0.0.3'
+    version = '0.0.4'
     sourceCompatibility = '1.8'
 
     repositories {

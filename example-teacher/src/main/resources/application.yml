@@ -6,7 +6,7 @@ spring:
     nacos:
       discovery:
         namespace: public
-        server-addr: http://10.0.11.66:8848
+        server-addr: http://10.0.11.20:8848
 
 dubbo:
   cloud:
@@ -30,13 +30,15 @@ jetcache:
       type: redis.lettuce
       keyPrefix: "cache:jetcache-plus-example:"
       keyConvertor: fastjson
+      valueEncoder: jackson
+      valueDecoder: jackson
       uri:
-        - redis://10.0.11.72:8001
-        - redis://10.0.11.72:8002
-        - redis://10.0.11.72:8003
-        - redis://10.0.11.72:8004
-        - redis://10.0.11.72:8005
-        - redis://10.0.11.72:8006
+        - "redis://${redis.password}@10.0.11.20:6379"
+        - "redis://${redis.password}@10.0.11.20:6380"
+        - "redis://${redis.password}@10.0.11.20:6381"
+        - "redis://${redis.password}@10.0.11.20:6382"
+        - "redis://${redis.password}@10.0.11.20:6383"
+        - "redis://${redis.password}@10.0.11.20:6384"
 
 logging:
   level:

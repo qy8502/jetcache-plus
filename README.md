@@ -9,6 +9,7 @@
 * 在使用两级缓存时不能同步失效分布式服务下的本地缓存。
 * `@Cached`注解不能提供获取多个缓存集合，而`@CacheInvalidate`和`@CacheUpdate`有multi模式却无法通过SPEL拼写集合中每个key。
 * 在使用基于dubbo的微服务框架中，服务消费者无法先调用缓存再调用RCP，以提高效率。
+* 没有再提供json的序列化器，检查数据与跨平台获取缓存数据有诸多不便。
 
 jetcache-plus作为jetcache的增强工具，提供了解决这些问题的方案。
 
@@ -50,7 +51,7 @@ jetcache支持本地缓存和二级缓存。但是在分布式部署时，哪怕
 
 build.gradle文件引入依赖，使用 redis-lettuce 且排除 lettuce 因为其版本不支持 clientTracking。引入lettuce-core 6.x。
 ```groovy
-    implementation 'io.github.qy8502:jetcache-plus-auto-invalidate-local:0.0.3'
+    implementation 'io.github.qy8502:jetcache-plus-auto-invalidate-local:0.0.4'
     implementation('com.alicp.jetcache:jetcache-starter-redis-lettuce:2.6.0'){
         exclude group: 'io.lettuce'
     }
@@ -105,12 +106,12 @@ Arg:ids         Cache.getAll    InvokeMethod    Cache.putAll    Result
 build.gradle文件引入依赖，`@MultiCached`注解可能为项目接口使用，单独一个引用。<br>
 服务接口层
 ```groovy
-    implementation 'io.github.qy8502:jetcache-plus-multi-anno-api:0.0.3'
+    implementation 'io.github.qy8502:jetcache-plus-multi-anno-api:0.0.4'
     implementation 'com.alicp.jetcache:jetcache-anno:2.6.0'
 ```
 服务实现层
 ```groovy
-    implementation 'io.github.qy8502:jetcache-plus-multi:0.0.3'
+    implementation 'io.github.qy8502:jetcache-plus-multi:0.0.4'
     implementation('com.alicp.jetcache:jetcache-starter-redis-lettuce:2.6.0')
 ```
 
@@ -231,7 +232,7 @@ build.gradle文件引入依赖
 ```
 服务实现层
 ```groovy
-    implementation 'io.github.qy8502:jetcache-plus-dubbo:0.0.3'
+    implementation 'io.github.qy8502:jetcache-plus-dubbo:0.0.4'
     implementation('com.alicp.jetcache:jetcache-starter-redis-lettuce:2.6.0')
 ```
 
@@ -267,9 +268,35 @@ public interface SchoolService {
 
 
 <br>
-    
 
-# 4. 例子
+# 4. 本地缓存自动失效
+## 4.1. 背景
+jetcache原来支持fastjson序列化器，后因为某些原因去掉了。但是将缓存已JSON格式存储，方便阅读以及跨平台获取的需求仍然存在。所以需要开发一个基于jackson的序列化器，实现这个需求。
+
+## 4.2. 实现方式
+通过参考官方提供的解决方案实现：
+<br>
+[如何定制自己的序列化器](https://github.com/alibaba/jetcache/wiki/FAQ_CN)
+
+## 4.3. 使用说明
+
+build.gradle文件引入依赖.
+```groovy
+    implementation 'io.github.qy8502:jetcache-plus-serializer-jackson:0.0.4'
+```
+
+配置中`valueEncoder`与`valueDecoder`使用`jackson`选项。
+```yaml
+jetcache:
+  remote:
+    default:
+      valueEncoder: jackson
+      valueDecoder: jackson
+```
+
+<br>
+
+# 5. 例子
 模块example-school提供dubbo服务，模块example-teacher为服务消费者，修改两个模块中`application.yml`文件的nacos连接配置和redis连接配置。
 先启动ExampleSchoolApplication端口8081，在启动ExampleTeacherApplication端口8080。
 

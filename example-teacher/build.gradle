@@ -9,6 +9,7 @@ dependencies {
     implementation project(':jetcache-plus-multi')
     implementation project(':jetcache-plus-auto-invalidate-local')
     implementation project(':jetcache-plus-dubbo')
+    implementation project(':jetcache-plus-serializer-jackson')
     implementation("io.lettuce:lettuce-core:${lettuceVersion}")
     implementation("com.alicp.jetcache:jetcache-starter-redis-lettuce:${jetcacheVersion}"){
         exclude group: 'io.lettuce'

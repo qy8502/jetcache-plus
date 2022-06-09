@@ -1,7 +1,9 @@
 package io.github.qy8502.jetcacheplus;
 
+import com.alicp.jetcache.CacheValueHolder;
 import com.alicp.jetcache.support.AbstractValueDecoder;
-import com.alicp.jetcache.support.CacheEncodeException;
+
+import java.io.IOException;
 
 public class JacksonValueDecoder extends AbstractValueDecoder {
 
@@ -15,13 +17,7 @@ public class JacksonValueDecoder extends AbstractValueDecoder {
 
 
     @Override
-    public Object doApply(byte[] buffer) {
-        try {
-            return JACKSON.MAPPER.readValue(buffer, Object.class);
-        } catch (Exception e) {
-            StringBuilder sb = new StringBuilder("Json Decoder error. ");
-            sb.append("msg=").append(e.getMessage());
-            throw new CacheEncodeException(sb.toString(), e);
-        }
+    public Object doApply(byte[] buffer) throws IOException {
+        return JACKSON.MAPPER.readValue(buffer, CacheValueHolder.class);
     }
 }

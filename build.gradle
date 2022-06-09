@@ -24,7 +24,7 @@ subprojects {
 
     group = 'io.github.qy8502'
     //version = '0.0.2-SNAPSHOT'
-    version = '0.0.4'
+    version = '0.0.5'
     sourceCompatibility = '1.8'
 
     repositories {

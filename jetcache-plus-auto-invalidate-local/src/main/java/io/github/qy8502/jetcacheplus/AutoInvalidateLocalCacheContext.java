@@ -9,19 +9,20 @@ import com.alicp.jetcache.anno.support.SpringConfigProvider;
 import com.alicp.jetcache.redis.lettuce.JetCacheCodec;
 import com.alicp.jetcache.redis.lettuce.RedisLettuceCache;
 import com.alicp.jetcache.redis.lettuce.RedisLettuceCacheConfig;
-import io.lettuce.core.AbstractRedisClient;
-import io.lettuce.core.RedisClient;
-import io.lettuce.core.TrackingArgs;
+import io.lettuce.core.*;
 import io.lettuce.core.api.push.PushListener;
 import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.cluster.models.partitions.RedisClusterNode;
 import io.lettuce.core.codec.RedisCodec;
-import io.lettuce.core.pubsub.StatefulRedisPubSubConnectionImpl;
+import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.util.ReflectionUtils;
 
+import java.io.Closeable;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,7 @@ public class AutoInvalidateLocalCacheContext extends SpringCacheContext {
 
     public class AutoInvalidateLocalSubscription {
         private Map<String, Cache> localCacheMap;
-        private List<StatefulRedisPubSubConnectionImpl> pubSubConnections = new ArrayList<>();
+        private List<StatefulRedisPubSubConnection> pubSubConnections = new ArrayList<>();
         private AbstractRedisClient redisClient;
         private PushListener listener;
         private RedisCodec cacheCodec = new JetCacheCodec();
@@ -41,17 +42,37 @@ public class AutoInvalidateLocalCacheContext extends SpringCacheContext {
         public AutoInvalidateLocalSubscription(AbstractRedisClient redisClient) {
             this.redisClient = redisClient;
             this.localCacheMap = new ConcurrentHashMap<>();
-            if (redisClient instanceof RedisClient) {
-                this.pubSubConnections.add((StatefulRedisPubSubConnectionImpl) ((RedisClient) redisClient).connectPubSub(cacheCodec));
-            } else if (redisClient instanceof RedisClusterClient) {
-                //clientTracking命令只能针对Redis集群的单个节点，需要所有节点的连接
-                ((RedisClusterClient) redisClient).getPartitions().forEach(node -> {
-                    if (node.is(RedisClusterNode.NodeFlag.UPSTREAM)) {
-                        this.pubSubConnections.add((StatefulRedisPubSubConnectionImpl) RedisClient.create(node.getUri()).connectPubSub(cacheCodec));
+            try {
+                if (redisClient instanceof RedisClient) {
+                    this.pubSubConnections.add((StatefulRedisPubSubConnection) ((RedisClient) redisClient).connectPubSub(cacheCodec));
+                } else if (redisClient instanceof RedisClusterClient) {
+//                    StatefulRedisClusterPubSubConnection pubSubConnection = (StatefulRedisClusterPubSubConnection) ((RedisClusterClient) redisClient).connectPubSub(cacheCodec);
+//                    pubSubConnection.setNodeMessagePropagation(true);
+//                    this.pubSubConnections.add(pubSubConnection);
+
+                    //clientTracking命令只能针对Redis集群的单个节点，需要所有节点的连接
+                    Field initialUris = ReflectionUtils.findField(RedisClusterClient.class, "initialUris");
+                    ReflectionUtils.makeAccessible(initialUris);
+                    Iterable<RedisURI> uris = (Iterable<RedisURI>) initialUris.get(redisClient);
+                    for (RedisClusterNode node : ((RedisClusterClient) redisClient).getPartitions()) {
+                        if (node.is(RedisClusterNode.NodeFlag.UPSTREAM)) {
+                            //找到原始uri，节点uri没有密码
+                            RedisURI nodeUri = node.getUri();
+                            for (RedisURI uri : uris) {
+                                if (uri.getHost().equals(node.getUri().getHost()) && uri.getPort() == node.getUri().getPort()) {
+                                    nodeUri = uri;
+                                    break;
+                                }
+                            }
+                            this.pubSubConnections.add(RedisClient.create(nodeUri).connectPubSub(cacheCodec));
+                        }
                     }
-                });
-            } else {
-                logger.error("AutoInvalidateLocalCacheContext remoteCache的redisClient类型 {} 不支持！", redisClient.getClass());
+                } else {
+                    logger.error("AutoInvalidateLocalCacheContext remoteCache的redisClient类型 {} 不支持！", redisClient.getClass());
+                    return;
+                }
+            } catch (Exception ex) {
+                logger.error("AutoInvalidateLocalCacheContext 创建订阅连接发生异常", ex);
                 return;
             }
             this.listener = message -> {
@@ -119,4 +140,5 @@ public class AutoInvalidateLocalCacheContext extends SpringCacheContext {
         }
         return cache;
     }
+
 }

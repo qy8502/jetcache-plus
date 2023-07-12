@@ -132,7 +132,7 @@ class MutliSpelEvaluator implements Function<Object, Object> {
 
     private static ExpressionParser parser;
     private static ParameterNameDiscoverer parameterNameDiscoverer;
-    private static final Pattern patternMultiKey = Pattern.compile("#(.*?)\\[" + MultiCacheConsts.EACH_ELEMENT.replace("$", "\\$") + "\\]");
+    private static final Pattern patternMultiKey = Pattern.compile("#(\\w+?)\\[" + MultiCacheConsts.EACH_ELEMENT.replace("$", "\\$") + "\\]");
 
     static {
         parser = new SpelExpressionParser();

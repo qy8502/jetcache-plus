@@ -3,4 +3,5 @@ dependencies {
     implementation project(':jetcache-plus-multi-anno-api')
     implementation("org.springframework.boot:spring-boot-autoconfigure")
     implementation("com.alicp.jetcache:jetcache-anno:${jetcacheVersion}")
+    implementation 'org.mvel:mvel2:2.4.12.Final'
 }

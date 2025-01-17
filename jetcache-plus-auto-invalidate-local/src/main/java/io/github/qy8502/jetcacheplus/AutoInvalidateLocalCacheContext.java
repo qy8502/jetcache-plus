@@ -1,15 +1,17 @@
 package io.github.qy8502.jetcacheplus;
 
 import com.alicp.jetcache.Cache;
-import com.alicp.jetcache.MultiLevelCacheConfig;
+import com.alicp.jetcache.CacheManager;
 import com.alicp.jetcache.anno.method.SpringCacheContext;
-import com.alicp.jetcache.anno.support.CachedAnnoConfig;
 import com.alicp.jetcache.anno.support.GlobalCacheConfig;
 import com.alicp.jetcache.anno.support.SpringConfigProvider;
 import com.alicp.jetcache.redis.lettuce.JetCacheCodec;
 import com.alicp.jetcache.redis.lettuce.RedisLettuceCache;
 import com.alicp.jetcache.redis.lettuce.RedisLettuceCacheConfig;
-import io.lettuce.core.*;
+import io.lettuce.core.AbstractRedisClient;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisURI;
+import io.lettuce.core.TrackingArgs;
 import io.lettuce.core.api.push.PushListener;
 import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.cluster.models.partitions.RedisClusterNode;
@@ -20,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.ReflectionUtils;
 
-import java.io.Closeable;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -31,6 +32,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AutoInvalidateLocalCacheContext extends SpringCacheContext {
 
     private static final Logger logger = LoggerFactory.getLogger(AutoInvalidateLocalCacheContext.class);
+
+    public AutoInvalidateLocalCacheContext(CacheManager cacheManager, SpringConfigProvider configProvider, GlobalCacheConfig globalCacheConfig, ApplicationContext applicationContext) {
+        super(cacheManager, configProvider, globalCacheConfig, applicationContext);
+    }
+
 
     public class AutoInvalidateLocalSubscription {
         private Map<String, Cache> localCacheMap;
@@ -114,31 +120,31 @@ public class AutoInvalidateLocalCacheContext extends SpringCacheContext {
     Map<AbstractRedisClient, AutoInvalidateLocalSubscription> subscriptionMap = new ConcurrentHashMap();
 
 
-    public AutoInvalidateLocalCacheContext(SpringConfigProvider configProvider, GlobalCacheConfig globalCacheConfig, ApplicationContext applicationContext) {
-        super(configProvider, globalCacheConfig, applicationContext);
-    }
-
-    @Override
-    protected Cache buildCache(CachedAnnoConfig cachedAnnoConfig, String area, String cacheName) {
-        Cache cache = super.buildCache(cachedAnnoConfig, area, cacheName);
-        if (cache.config() instanceof MultiLevelCacheConfig) {
-            MultiLevelCacheConfig config = (MultiLevelCacheConfig) cache.config();
-            if (config.getCaches().size() < 2 && !(config.getCaches().get(1) instanceof RedisLettuceCache)) {
-                logger.error("AutoInvalidateLocalCacheContext {}-{}的remoteCache不是RedisLettuceCache，不支持自动失效本地缓存！", area, cacheName);
-                return cache;
-            }
-            Cache local = (Cache) config.getCaches().get(0);
-            RedisLettuceCache remote = (RedisLettuceCache) config.getCaches().get(1);
-            RedisLettuceCacheConfig remoteConfig = (RedisLettuceCacheConfig) remote.config();
-            // 每个redis配置创建一个订阅
-            AutoInvalidateLocalSubscription subscription = subscriptionMap.computeIfAbsent(remoteConfig.getRedisClient(), (key) -> new AutoInvalidateLocalSubscription(key));
-            // 对应远端缓存与本地缓存关系
-            String keyPrefix = subscription.addCacheTracking(remote, local);
-            if (keyPrefix != null) {
-                logger.debug("JETCACHE_PLUS_AUTO_INVALIDATE_LOCAL -> subscribe to remote cache '{}' for local cache '{}-{}' invalidation", keyPrefix, area, cacheName);
-            }
-        }
-        return cache;
-    }
+//    public AutoInvalidateLocalCacheContext(SpringConfigProvider configProvider, GlobalCacheConfig globalCacheConfig, ApplicationContext applicationContext) {
+//        super(configProvider, globalCacheConfig, applicationContext);
+//    }
+//
+//    @Override
+//    protected Cache buildCache(CachedAnnoConfig cachedAnnoConfig, String area, String cacheName) {
+//        Cache cache = super.buildCache(cachedAnnoConfig, area, cacheName);
+//        if (cache.config() instanceof MultiLevelCacheConfig) {
+//            MultiLevelCacheConfig config = (MultiLevelCacheConfig) cache.config();
+//            if (config.getCaches().size() < 2 && !(config.getCaches().get(1) instanceof RedisLettuceCache)) {
+//                logger.error("AutoInvalidateLocalCacheContext {}-{}的remoteCache不是RedisLettuceCache，不支持自动失效本地缓存！", area, cacheName);
+//                return cache;
+//            }
+//            Cache local = (Cache) config.getCaches().get(0);
+//            RedisLettuceCache remote = (RedisLettuceCache) config.getCaches().get(1);
+//            RedisLettuceCacheConfig remoteConfig = (RedisLettuceCacheConfig) remote.config();
+//            // 每个redis配置创建一个订阅
+//            AutoInvalidateLocalSubscription subscription = subscriptionMap.computeIfAbsent(remoteConfig.getRedisClient(), (key) -> new AutoInvalidateLocalSubscription(key));
+//            // 对应远端缓存与本地缓存关系
+//            String keyPrefix = subscription.addCacheTracking(remote, local);
+//            if (keyPrefix != null) {
+//                logger.debug("JETCACHE_PLUS_AUTO_INVALIDATE_LOCAL -> subscribe to remote cache '{}' for local cache '{}-{}' invalidation", keyPrefix, area, cacheName);
+//            }
+//        }
+//        return cache;
+//    }
 
 }

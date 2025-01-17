@@ -31,6 +31,7 @@ jetcache:
       keyConvertor: fastjson
       valueEncoder: jackson
       valueDecoder: jackson
+      mode: cluster
       uri:
         - "redis://${redis.password}@10.0.11.20:6379"
         - "redis://${redis.password}@10.0.11.20:6380"

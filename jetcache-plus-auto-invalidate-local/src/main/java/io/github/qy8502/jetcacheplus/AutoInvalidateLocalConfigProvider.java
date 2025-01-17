@@ -15,8 +15,8 @@ public class AutoInvalidateLocalConfigProvider extends SpringConfigProvider {
     }
 
 
-    @Override
-    protected CacheContext newContext() {
-        return new AutoInvalidateLocalCacheContext(this, globalCacheConfig, applicationContext);
-    }
+//    @Override
+//    protected CacheContext newContext() {
+//        return new AutoInvalidateLocalCacheContext(this, globalCacheConfig, applicationContext);
+//    }
 }

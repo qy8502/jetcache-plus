@@ -15,13 +15,29 @@ jetcache-plus作为jetcache的增强工具，提供了解决这些问题的方�
 
 环境：
 * JDK1.8
-* Spring Framework  5.3.3
-* Spring Boot 2.4.2 
-* Spring Cloud Alibaba 2021.1
+* Spring Framework  6.1.5
+* Spring Boot 3.2.4 
+* Spring Cloud Alibaba 2023.0.1.0
 * Lettuce 6.1.4.RELEASE
-* Dubbo 2.7.8
+* Dubbo 3.3.2
+* jetcache 2.7.7
 
 ---------------------------------------------
+
+# 0. 概述
+针对jetcache的进行升级适配3.x 目前测试适配jackson测试成功
+## 0.1 未完成
+- jetcache-plus-auto-invalidate-local 没有调试，代码直接注释了
+- jetcache-plus-multi 没有调试，代码直接注释了
+## 0.2 已完成
+- jetcache-plus-serializer-jackson 调试完成
+调用[http://127.0.0.1:8081/school/list?ids=S1,S2](http://127.0.0.1:8081/school/list?ids=S1,S2)
+- **注意** 
+- 2.7.7版本lettuce连接redis cluster需要在yml里面指定mode=cluster
+## 0.3 未变
+- 其它模块未变
+
+
 
 <br>
     

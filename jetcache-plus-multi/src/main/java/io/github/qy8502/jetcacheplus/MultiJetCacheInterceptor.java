@@ -64,7 +64,8 @@ public class MultiJetCacheInterceptor extends JetCacheInterceptor {
             return invocation.proceed();
         }
 
-        CacheInvokeContext context = configProvider.getCacheContext().createCacheInvokeContext(cacheConfigMap);
+        //CacheInvokeContext context = configProvider.getCacheContext().createCacheInvokeContext(cacheConfigMap);
+        CacheInvokeContext context = new CacheInvokeContext();
         context.setTargetObject(invocation.getThis());
         context.setInvoker(invocation::proceed);
         context.setMethod(method);
@@ -74,6 +75,7 @@ public class MultiJetCacheInterceptor extends JetCacheInterceptor {
         return MultiCacheHandler.invoke(context);
     }
 
+    @Override
     public void setCacheConfigMap(ConfigMap cacheConfigMap) {
         this.cacheConfigMap = cacheConfigMap;
     }

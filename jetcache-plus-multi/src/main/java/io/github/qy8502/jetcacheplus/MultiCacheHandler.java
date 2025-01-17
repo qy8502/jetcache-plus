@@ -23,7 +23,7 @@ public class MultiCacheHandler {
     private static class CacheContextSupport extends CacheContext {
 
         public CacheContextSupport() {
-            super(null, null);
+            super(null, null, null);
         }
 
         static void _enable() {

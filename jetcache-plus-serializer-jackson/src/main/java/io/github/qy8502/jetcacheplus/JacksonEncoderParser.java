@@ -9,9 +9,8 @@ import org.springframework.stereotype.Component;
 import java.util.function.Function;
 
 /**
- * @author <a href="mailto:areyouok@gmail.com">huangli</a>
+ * Jackson 序列化解析器
  */
-@Component
 public class JacksonEncoderParser extends DefaultSpringEncoderParser {
 
     public static final String SERIAL_POLICY_JACKSON = "JACKSON";

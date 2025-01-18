@@ -8,4 +8,5 @@ dependencies {
     implementation("com.alicp.jetcache:jetcache-redis-lettuce:${jetcacheVersion}"){
         exclude group: 'io.lettuce'
     }
+    compileOnly("com.alicp.jetcache:jetcache-autoconfigure:${jetcacheVersion}")
 }

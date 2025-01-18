@@ -1,9 +1,9 @@
 ext {
     jetcacheVersion = '2.7.7'
-    jacksonVersion = "2.13.3"
+    jacksonVersion = "2.18.2"
     springBootVersion = '3.2.4'
     springCloudAlibabaVersion = '2023.0.1.0'
-    lettuceVersion = "6.1.4.RELEASE"
+    lettuceVersion = "6.5.2.RELEASE"
     dubboVersion = "3.3.2"
 }
 
@@ -25,7 +25,7 @@ subprojects {
     group = 'io.github.qy8502'
     //version = '0.0.2-SNAPSHOT'
     version = '1.0.0'
-    
+
     java {
         toolchain {
             languageVersion = JavaLanguageVersion.of(21)
@@ -45,7 +45,7 @@ subprojects {
     }
     compileJava {
         options.encoding = "UTF-8"
-        options.compilerArgs << '-parameters'
+        options.compilerArgs << '-parameters' << "-Xlint:unchecked" << "-Xlint:deprecation"
     }
 
     dependencies {

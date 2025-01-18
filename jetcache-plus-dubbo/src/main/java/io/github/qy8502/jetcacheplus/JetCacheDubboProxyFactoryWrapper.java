@@ -83,14 +83,22 @@ public class JetCacheDubboProxyFactoryWrapper implements ProxyFactory {
                     @Override
                     public Object invoke(MethodInvocation invocation) throws Throwable {
                         MethodHandle methodHandle = methodHandleMap.computeIfAbsent(invocation.getMethod(), method -> {
+//                            try {
+//                                Constructor<MethodHandles.Lookup> constructor = null;
+//                                constructor = MethodHandles.Lookup.class
+//                                        .getDeclaredConstructor(Class.class);
+//                                constructor.setAccessible(true);
+//                                return constructor.newInstance(method.getDeclaringClass())
+//                                        .in(method.getDeclaringClass())
+//                                        .unreflectSpecial(method, method.getDeclaringClass())
+//                                        .bindTo(dubboProxy);
+//                            } catch (Exception e) {
+//                                throw new RuntimeException(e);
+//                            }
                             try {
-                                Constructor<MethodHandles.Lookup> constructor = null;
-                                constructor = MethodHandles.Lookup.class
-                                        .getDeclaredConstructor(Class.class);
-                                constructor.setAccessible(true);
-                                return constructor.newInstance(method.getDeclaringClass())
-                                        .in(method.getDeclaringClass())
-                                        .unreflectSpecial(method, method.getDeclaringClass())
+                                // 使用 privateLookupIn 替代反射方式
+                                MethodHandles.Lookup lookup = MethodHandles.privateLookupIn(method.getDeclaringClass(), MethodHandles.lookup());
+                                return lookup.unreflectSpecial(method, method.getDeclaringClass())
                                         .bindTo(dubboProxy);
                             } catch (Exception e) {
                                 throw new RuntimeException(e);

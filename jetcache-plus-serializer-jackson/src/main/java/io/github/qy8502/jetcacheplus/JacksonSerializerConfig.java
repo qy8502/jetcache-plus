@@ -1,8 +1,6 @@
 package io.github.qy8502.jetcacheplus;
 
-import com.alicp.jetcache.anno.support.SpringConfigProvider;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -11,14 +9,10 @@ import org.springframework.context.annotation.Configuration;
  * @author qy850
  */
 @Configuration
-public class JacksonSerializerConfig implements BeanPostProcessor {
+public class JacksonSerializerConfig {
 
-    @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        if (SpringConfigProvider.class.isInstance(bean)) {
-            ((SpringConfigProvider) bean).setEncoderParser(new JacksonEncoderParser());
-        }
-        return bean;
+    @Bean
+    public JacksonEncoderParser jacksonEncoderParser() {
+        return new JacksonEncoderParser();
     }
-
 }

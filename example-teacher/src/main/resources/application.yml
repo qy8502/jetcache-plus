@@ -7,8 +7,17 @@ spring:
       discovery:
         namespace: public
         server-addr: http://10.0.11.20:8848
+        username: nacos
+        password: nacos
 
 dubbo:
+  application:
+    qos-enable: false
+  registry:
+    protocol: dubbo
+    address: nacos://10.0.11.20:8848
+    parameters:
+      namespace: public
   cloud:
     subscribed-services: jetcache-plus-example-school
   protocol:
@@ -24,21 +33,22 @@ jetcache:
   local:
     default:
       type: caffeine
-      keyConvertor: fastjson
+      keyConvertor: fastjson2
   remote:
     default:
       type: redis.lettuce
       keyPrefix: "cache:jetcache-plus-example:"
-      keyConvertor: fastjson
+      keyConvertor: fastjson2
       valueEncoder: jackson
       valueDecoder: jackson
+      mode: cluster
       uri:
-        - "redis://${redis.password}@10.0.11.20:6379"
-        - "redis://${redis.password}@10.0.11.20:6380"
-        - "redis://${redis.password}@10.0.11.20:6381"
-        - "redis://${redis.password}@10.0.11.20:6382"
-        - "redis://${redis.password}@10.0.11.20:6383"
-        - "redis://${redis.password}@10.0.11.20:6384"
+        - "redis://${redis.password}@10.0.11.191:6370"
+        - "redis://${redis.password}@10.0.11.191:6371"
+        - "redis://${redis.password}@10.0.11.191:6372"
+        - "redis://${redis.password}@10.0.11.191:6373"
+        - "redis://${redis.password}@10.0.11.191:6374"
+        - "redis://${redis.password}@10.0.11.191:6375"
 
 logging:
   level:

@@ -22,6 +22,7 @@
 
 ### 变更
 
+- Maven Central 发布迁移至 Central Publisher Portal（`com.gradleup.nmcp`），替代已停服的 OSSRH。
 - 返回类型为 `Map` 时改用 `LinkedHashMap`，结果 key 为请求集合元素，数量和顺序与请求集合一致，缺失值仍以 `null` 保留。
 - JetCache 升级至 2.7.9。
 

@@ -1,3 +1,28 @@
+pluginManagement {
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        gradlePluginPortal()
+    }
+}
+
+plugins {
+    id 'com.gradleup.nmcp.settings' version '1.6.2'
+}
+
+nmcpSettings {
+    centralPortal {
+        def portalUsername = System.getenv('CENTRAL_PORTAL_USERNAME')
+        def portalPassword = System.getenv('CENTRAL_PORTAL_PASSWORD')
+        if (portalUsername != null) {
+            username.set(portalUsername)
+        }
+        if (portalPassword != null) {
+            password.set(portalPassword)
+        }
+        publishingType.set('USER_MANAGED')
+    }
+}
+
 rootProject.name = 'jetcache-plus'
 include 'jetcache-plus-multi'
 include 'jetcache-plus-multi-anno-api'

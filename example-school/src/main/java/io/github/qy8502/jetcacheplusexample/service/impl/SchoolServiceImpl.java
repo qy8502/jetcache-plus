@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -112,8 +113,39 @@ public class SchoolServiceImpl implements SchoolService {
 
 
     @Override
+    public List<SchoolDTO> listSchoolBySchoolsNoCache(List<SchoolDTO> schools) {
+        logger.warn("JETCACHE_PLUS_EXAMPLE -> SchoolServiceImpl.listSchoolBySchoolsNoCache({}) invoked!", schoolIds(schools));
+        return schools.stream()
+                .map(school -> schoolRepository.get(school.getId()))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
+    public List<SchoolDTO> listSchoolByYearAndSchoolsNoCache(Integer year, List<SchoolDTO> schools) {
+        logger.warn("JETCACHE_PLUS_EXAMPLE -> SchoolServiceImpl.listSchoolByYearAndSchoolsNoCache({}, {}) invoked!", year, schoolIds(schools));
+        return schools.stream()
+                .map(school -> schoolRepository.get(school.getId()))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    private List<String> schoolIds(List<SchoolDTO> schools) {
+        return schools.stream().map(SchoolDTO::getId).collect(Collectors.toList());
+    }
+
+
+    @Override
     public void deleteSchoolByIds(Set<String> ids) {
         logger.warn("JETCACHE_PLUS_EXAMPLE -> SchoolServiceImpl.deleteSchoolByIds({}) invoked!", ids);
+        return;
+    }
+
+
+    @Override
+    public void deleteSchoolBySchools(List<SchoolDTO> schools) {
+        logger.warn("JETCACHE_PLUS_EXAMPLE -> SchoolServiceImpl.deleteSchoolBySchools({}) invoked!", schoolIds(schools));
         return;
     }
 

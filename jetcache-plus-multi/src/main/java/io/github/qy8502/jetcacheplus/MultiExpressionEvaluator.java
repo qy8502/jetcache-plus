@@ -166,7 +166,7 @@ class MutliSpelEvaluator implements Function<Object, Object> {
         } else {
             if (parameterNames != null) {
                 for (int i = 0; i < parameterNames.length; i++) {
-                    if (parameterNames[i].contains(multiArg)) {
+                    if (parameterNames[i].equals(multiArg)) {
                         multiArgIndex = i;
                     }
                 }
@@ -211,7 +211,17 @@ class MutliSpelEvaluator implements Function<Object, Object> {
             if (multiResult) {
                 context.setVariable(MultiCacheConsts.RESULT, new Object[]{element});
             }
-            values.put(element, expression.getValue(context));
+            Object key;
+            try {
+                key = expression.getValue(context);
+            } catch (RuntimeException e) {
+                // keep legacy null keys when the expression can handle null; only skip if it cannot
+                if (element == null) {
+                    return;
+                }
+                throw e;
+            }
+            values.put(element, key);
         });
         return values;
 

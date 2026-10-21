@@ -9,8 +9,8 @@ public class MultiCacheMap<K, V> extends LinkedHashMap<K, V> {
     private boolean multiResult = false;
     private int multiArgIndex = -1;
 
-    private MultiCacheMap values;
-    private MultiCacheMap conditions;
+    private Map<Object, Object> values;
+    private Map<Object, Object> conditions;
 
     public boolean isMultiResult() {
         return multiResult;
@@ -28,19 +28,19 @@ public class MultiCacheMap<K, V> extends LinkedHashMap<K, V> {
         this.multiArgIndex = multiArgIndex;
     }
 
-    public MultiCacheMap getValues() {
+    public Map<Object, Object> getValues() {
         return values;
     }
 
-    public void setValues(MultiCacheMap values) {
+    public void setValues(Map<Object, Object> values) {
         this.values = values;
     }
 
-    public MultiCacheMap getConditions() {
+    public Map<Object, Object> getConditions() {
         return conditions;
     }
 
-    public void setConditions(MultiCacheMap conditions) {
+    public void setConditions(Map<Object, Object> conditions) {
         this.conditions = conditions;
     }
 
@@ -72,7 +72,7 @@ public class MultiCacheMap<K, V> extends LinkedHashMap<K, V> {
         return element.get(value);
     }
 
-    public static <V> DefaultValueMap<Object, V> defaultValueMap(V defalutValue) {
+    public static <V> Map<Object, V> defaultValueMap(V defalutValue) {
         return new DefaultValueMap<>(defalutValue);
     }
 

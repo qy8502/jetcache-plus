@@ -133,7 +133,15 @@ public class MultiCacheHandler {
                 }
                 logger.debug("JETCACHE_PLUS_MULTI -> {} get cache: {}", methodName, keySet);
 
-                Map<Object, Object> cachedValues = cache.getAll(keySet);
+                Map<Object, Object> cachedValues = new HashMap<>();
+                if (!keySet.isEmpty()) {
+                    Map<Object, Object> cacheValues = cache.getAll(keySet);
+                    if (cacheValues == null) {
+                        logger.warn("JETCACHE_PLUS_MULTI -> {} bulk cache read returned null; loading from origin", methodName);
+                    } else {
+                        cachedValues.putAll(cacheValues);
+                    }
+                }
 
                 logger.debug("JETCACHE_PLUS_MULTI -> {} result from cache: {}", methodName, cachedValues.keySet());
 
@@ -254,7 +262,8 @@ public class MultiCacheHandler {
         } else if (returnType.equals(Set.class)) {
             return result.collect(Collectors.toSet());
         } else if (returnType.equals(Map.class)) {
-            return mkey.entrySet().stream().collect(HashMap::new, (m, entry) -> m.put(entry.getKey(), cachedValues.get(entry.getValue())), HashMap::putAll);
+            return mkey.entrySet().stream()
+                    .collect(LinkedHashMap::new, (m, entry) -> m.put(entry.getKey(), cachedValues.get(entry.getValue())), LinkedHashMap::putAll);
         } else {
             logger.error("jetcache @MultiCached returnType only be : List, Set, Collection or Map. Not support " + returnType);
             return null;

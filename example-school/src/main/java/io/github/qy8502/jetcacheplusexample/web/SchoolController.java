@@ -20,12 +20,15 @@ import io.github.qy8502.jetcacheplusexample.service.SchoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 public class SchoolController {
@@ -63,5 +66,21 @@ public class SchoolController {
     @GetMapping(value = "/school/list", params = {"ids"})
     public List<SchoolDTO> listSchoolByIds(@RequestParam List<String> ids) {
         return schoolService.listSchoolByIds(ids);
+    }
+
+    @PostMapping("/school/object/list")
+    public List<SchoolDTO> listSchoolBySchools(@RequestBody List<SchoolDTO> schools) {
+        return schoolService.listSchoolBySchools(schools);
+    }
+
+    @PostMapping("/school/object/delete")
+    public void deleteSchoolBySchools(@RequestBody List<SchoolDTO> schools) {
+        schoolService.deleteSchoolBySchools(schools);
+    }
+
+    @GetMapping(value = "/school/year/list")
+    public List<SchoolDTO> listSchoolByYearAndSchools(@RequestParam Integer year, @RequestParam List<String> ids) {
+        List<SchoolDTO> schools = ids.stream().map(id -> new SchoolDTO(id, null)).collect(Collectors.toList());
+        return schoolService.listSchoolByYearAndSchools(year, schools);
     }
 }

@@ -51,7 +51,7 @@ jetcache支持本地缓存和二级缓存。但是在分布式部署时，哪怕
 
 build.gradle文件引入依赖，使用 redis-lettuce 且排除 lettuce 因为其版本不支持 clientTracking。引入lettuce-core 6.x。
 ```groovy
-    implementation 'io.github.qy8502:jetcache-plus-auto-invalidate-local:1.0.0'
+    implementation 'io.github.qy8502:jetcache-plus-auto-invalidate-local:1.0.1'
     implementation('com.alicp.jetcache:jetcache-starter-redis-lettuce:2.7.7'){
         exclude group: 'io.lettuce'
     }
@@ -106,12 +106,12 @@ Arg:ids         Cache.getAll    InvokeMethod    Cache.putAll    Result
 build.gradle文件引入依赖，`@MultiCached`注解可能为项目接口使用，单独一个引用。<br>
 服务接口层
 ```groovy
-    implementation 'io.github.qy8502:jetcache-plus-multi-anno-api:1.0.0'
+    implementation 'io.github.qy8502:jetcache-plus-multi-anno-api:1.0.1'
     implementation 'com.alicp.jetcache:jetcache-anno:2.7.7'
 ```
 服务实现层
 ```groovy
-    implementation 'io.github.qy8502:jetcache-plus-multi:1.0.0'
+    implementation 'io.github.qy8502:jetcache-plus-multi:1.0.1'
     implementation('com.alicp.jetcache:jetcache-starter-redis-lettuce:2.7.7')
 ```
 
@@ -151,6 +151,47 @@ public interface SchoolService {
 
 ```
 
+### 2.3.1. 对象集合、联合主键与多参数 key
+
+`$$each$$` 标记的是需要迭代的集合参数或返回值，集合元素不限于 `String`。元素可以是任意对象，`$$each$$` 之后可以继续做属性访问、方法调用和 SpEL 拼接，因此对象集合、联合主键、多参数组合都可以直接表达：
+
+```java
+public interface SchoolService {
+
+    /**
+     * 对象集合：以每个学校对象的 id 属性作为缓存 key
+     */
+    @MultiCached(postKey = "#result[$$each$$].id", value = "#result[$$each$$]")
+    @Cached(name = "School:", key = "#schools[$$each$$].id", expire = 3600, cacheType = CacheType.BOTH)
+    List<SchoolDTO> listSchoolBySchools(List<SchoolDTO> schools);
+
+    /**
+     * 多参数联合 key：年份 + 学校对象 id
+     */
+    @MultiCached(postKey = "#year+':'+#result[$$each$$].id", value = "#result[$$each$$]")
+    @Cached(name = "SchoolYear:", key = "#year+':'+#schools[$$each$$].id", expire = 3600, cacheType = CacheType.BOTH)
+    List<SchoolDTO> listSchoolByYearAndSchools(Integer year, List<SchoolDTO> schools);
+}
+
+public interface ClassService {
+
+    /**
+     * 联合主键：同一个对象的 teacherId 与 lessonId 拼接
+     */
+    @MultiCached(postKey = "#result[$$each$$].teacherId+':'+#result[$$each$$].lessonId", value = "#result[$$each$$]")
+    @Cached(name = "Class:", key = "#classes[$$each$$].teacherId+':'+#classes[$$each$$].lessonId", expire = 3600, cacheType = CacheType.BOTH)
+    List<ClassDTO> listClassByClasses(List<ClassDTO> classes);
+}
+```
+
+注意：
+* `@MultiCached.postKey` 决定方法返回值回填缓存时使用的 key，其拼接规则必须与 `@Cached.key` 保持一致（如上例的 `teacherId+':'+lessonId`），否则写入的缓存无法被后续请求命中。
+* `postKey` 中可以直接引用其他方法参数（如 `#year`），用于构造与前置 key 相同的多参数 key。
+* `condition`/`postCondition` 既可以是针对整个集合的普通表达式（如 `#year >= 2000`），也可以是带 `$$each$$` 的逐项表达式（如 `#schools[$$each$$].id != 'S5'`）。
+* `condition` 只控制哪些元素从缓存读取，`postCondition` 只控制哪些元素写入缓存，两者都支持与 `key` 相同的对象集合 `$$each$$` 表达式。
+* 返回类型为 `Map` 时返回 `LinkedHashMap`，其 key 为请求集合中的元素（对象集合时为对象本身），个数与顺序均与请求集合一致，缺失的元素以 `null` 值保留。
+* 一个表达式内只能有一个集合参数或返回值使用 `$$each$$`。
+
 而且`@CacheInvalidate`与`@CacheUpdate`也支持`$$each$$`，使用`$$each$$`也可以使用其常量 `MultiCacheConsts.EACH_ELEMENT`
 ```java
 public interface SchoolService {
@@ -168,6 +209,13 @@ public interface SchoolService {
      */
     @CacheInvalidate(name = "School:", key = "#ids[" + MultiCacheConsts.EACH_ELEMENT + "]", multi = true)
     void deleteSchoolByIds(Set<String> ids);
+
+    /**
+     * 根据学校对象集合删除多个学校对象
+     * @param schools 学校对象集合
+     */
+    @CacheInvalidate(name = "School:", key = "#schools[$$each$$].id", multi = true)
+    void deleteSchoolBySchools(List<SchoolDTO> schools);
 }
 
 ```
@@ -232,7 +280,7 @@ build.gradle文件引入依赖
 ```
 服务实现层
 ```groovy
-    implementation 'io.github.qy8502:jetcache-plus-dubbo:1.0.0'
+    implementation 'io.github.qy8502:jetcache-plus-dubbo:1.0.1'
     implementation('com.alicp.jetcache:jetcache-starter-redis-lettuce:2.7.7')
 ```
 
@@ -282,7 +330,7 @@ jetcache原来支持fastjson序列化器，后因为某些原因去掉了。但�
 
 build.gradle文件引入依赖.
 ```groovy
-    implementation 'io.github.qy8502:jetcache-plus-serializer-jackson:1.0.0'
+    implementation 'io.github.qy8502:jetcache-plus-serializer-jackson:1.0.1'
 ```
 
 配置中`valueEncoder`与`valueDecoder`使用`jackson`选项。
@@ -311,6 +359,21 @@ jetcache:
 
 根据编号集合删除多个school
 <br>[http://127.0.0.1:8081/school/delete?ids=S1,S2](http://127.0.0.1:8081/school/delete?ids=S1,S2)
+
+根据学校对象集合获取多个school（对象集合key，POST body为学校对象数组）
+<br>POST http://127.0.0.1:8081/school/object/list
+```json
+[{"id":"S1"},{"id":"S2"}]
+```
+
+根据年份+学校对象集合获取多个school（多参数联合key）
+<br>[http://127.0.0.1:8081/school/year/list?year=2024&ids=S1,S2](http://127.0.0.1:8081/school/year/list?year=2024&ids=S1,S2)
+
+根据班级对象集合获取多个class（联合主键，POST body为班级对象数组）
+<br>POST http://127.0.0.1:8081/class/list
+```json
+[{"teacherId":"T1","lessonId":"L1"},{"teacherId":"T2","lessonId":"L2"}]
+```
 
 获取单个teacher
 <br>http://127.0.0.1:8080/teacher/T1

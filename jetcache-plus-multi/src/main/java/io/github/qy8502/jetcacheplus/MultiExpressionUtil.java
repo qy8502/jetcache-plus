@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
+import java.util.Map;
 import java.util.function.Function;
 
 public class MultiExpressionUtil {
@@ -81,7 +82,7 @@ public class MultiExpressionUtil {
 
                         cac.setKeyEvaluator((o) -> {
                             MultiCacheMap map = (MultiCacheMap) e.apply(o);
-                            map.setConditions((MultiCacheMap) ec.apply(o));
+                            map.setConditions((Map<Object, Object>) ec.apply(o));
                             return map;
                         });
                     } else {
@@ -137,8 +138,8 @@ public class MultiExpressionUtil {
                         }
                         cac.setPostKeyEvaluator((o) -> {
                             MultiCacheMap map = (MultiCacheMap) e.apply(o);
-                            map.setConditions((MultiCacheMap) ec.apply(o));
-                            map.setValues((MultiCacheMap) ev.apply(o));
+                            map.setConditions((Map<Object, Object>) ec.apply(o));
+                            map.setValues((Map<Object, Object>) ev.apply(o));
                             return map;
                         });
                     } else {

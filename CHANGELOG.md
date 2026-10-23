@@ -2,6 +2,14 @@
 
 本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.2] - 2026-10-23
+
+### 修复
+
+- 发布 POM 不再传递 Spring Framework / Spring Boot 版本约束，避免 JetCache 2.7.9 将宿主应用的 Spring Framework 提升到 6.2.x 后，与旧版 Spring Cloud Function 不兼容导致应用启动失败。
+- 各模块排除 JetCache 传递的 `org.springframework`、`org.springframework.boot` 依赖，`spring-boot-autoconfigure` 改为 `compileOnly`，Spring 版本统一交由宿主应用管理。
+- 发布时移除构建用的 Spring Boot / Spring Cloud Alibaba BOM 导入，避免向消费方注入额外依赖约束。
+
 ## [1.0.1] - 2026-10-21
 
 ### 新增
@@ -34,3 +42,4 @@
 - `Map` 返回值的内容不变，但迭代顺序和 JSON 字段顺序由原来的 `HashMap` 顺序改为请求集合顺序。
 
 [1.0.1]: https://github.com/qy8502/jetcache-plus/compare/v1.0.0...v1.0.1
+[1.0.2]: https://github.com/qy8502/jetcache-plus/compare/v1.0.1...v1.0.2

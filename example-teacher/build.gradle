@@ -13,6 +13,8 @@ dependencies {
     implementation("io.lettuce:lettuce-core:${lettuceVersion}")
     implementation("com.alicp.jetcache:jetcache-starter-redis-lettuce:${jetcacheVersion}"){
         exclude group: 'io.lettuce'
+        exclude group: 'org.springframework'
+        exclude group: 'org.springframework.boot'
     }
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery'

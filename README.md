@@ -20,7 +20,7 @@ jetcache-plus作为jetcache的增强工具，提供了解决这些问题的方�
 * Spring Cloud Alibaba 2023.0.1.0
 * Lettuce 6.5.2.RELEASE
 * Dubbo 3.3.2
-* jetcache 2.7.7
+* jetcache 2.7.9
 
 ---------------------------------------------
 
@@ -51,7 +51,7 @@ jetcache支持本地缓存和二级缓存。但是在分布式部署时，哪怕
 
 build.gradle文件引入依赖，使用 redis-lettuce 且排除 lettuce 因为其版本不支持 clientTracking。引入lettuce-core 6.x。
 ```groovy
-    implementation 'io.github.qy8502:jetcache-plus-auto-invalidate-local:1.0.1'
+    implementation 'io.github.qy8502:jetcache-plus-auto-invalidate-local:1.0.2'
     implementation('com.alicp.jetcache:jetcache-starter-redis-lettuce:2.7.7'){
         exclude group: 'io.lettuce'
     }
@@ -106,12 +106,12 @@ Arg:ids         Cache.getAll    InvokeMethod    Cache.putAll    Result
 build.gradle文件引入依赖，`@MultiCached`注解可能为项目接口使用，单独一个引用。<br>
 服务接口层
 ```groovy
-    implementation 'io.github.qy8502:jetcache-plus-multi-anno-api:1.0.1'
+    implementation 'io.github.qy8502:jetcache-plus-multi-anno-api:1.0.2'
     implementation 'com.alicp.jetcache:jetcache-anno:2.7.7'
 ```
 服务实现层
 ```groovy
-    implementation 'io.github.qy8502:jetcache-plus-multi:1.0.1'
+    implementation 'io.github.qy8502:jetcache-plus-multi:1.0.2'
     implementation('com.alicp.jetcache:jetcache-starter-redis-lettuce:2.7.7')
 ```
 
@@ -280,7 +280,7 @@ build.gradle文件引入依赖
 ```
 服务实现层
 ```groovy
-    implementation 'io.github.qy8502:jetcache-plus-dubbo:1.0.1'
+    implementation 'io.github.qy8502:jetcache-plus-dubbo:1.0.2'
     implementation('com.alicp.jetcache:jetcache-starter-redis-lettuce:2.7.7')
 ```
 
@@ -330,7 +330,7 @@ jetcache原来支持fastjson序列化器，后因为某些原因去掉了。但�
 
 build.gradle文件引入依赖.
 ```groovy
-    implementation 'io.github.qy8502:jetcache-plus-serializer-jackson:1.0.1'
+    implementation 'io.github.qy8502:jetcache-plus-serializer-jackson:1.0.2'
 ```
 
 配置中`valueEncoder`与`valueDecoder`使用`jackson`选项。

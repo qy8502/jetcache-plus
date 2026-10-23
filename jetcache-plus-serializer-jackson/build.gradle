@@ -1,7 +1,10 @@
 apply from: "$rootDir/gradle/publish.gradle"
 dependencies {
-    implementation("org.springframework.boot:spring-boot-autoconfigure")
-    implementation("com.alicp.jetcache:jetcache-anno:${jetcacheVersion}")
+    compileOnly("org.springframework.boot:spring-boot-autoconfigure")
+    implementation("com.alicp.jetcache:jetcache-anno:${jetcacheVersion}") {
+        exclude group: 'org.springframework'
+        exclude group: 'org.springframework.boot'
+    }
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}")
 
 }

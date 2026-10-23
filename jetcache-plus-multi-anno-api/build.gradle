@@ -1,5 +1,8 @@
 apply from: "$rootDir/gradle/publish.gradle"
 
 dependencies {
-    implementation("com.alicp.jetcache:jetcache-anno-api:${jetcacheVersion}")
+    implementation("com.alicp.jetcache:jetcache-anno-api:${jetcacheVersion}") {
+        exclude group: 'org.springframework'
+        exclude group: 'org.springframework.boot'
+    }
 }

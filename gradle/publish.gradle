@@ -39,6 +39,10 @@ publishing {
                     developerConnection = 'scm:git:ssh://github.com/qy8502/jetcache-plus.git'
                     url = 'https://github.com/qy8502/jetcache-plus'
                 }
+                withXml {
+                    def root = asNode()
+                    root.children().removeAll { it instanceof Node && it.name().toString() == 'dependencyManagement' }
+                }
             }
         }
     }

@@ -4,11 +4,11 @@ dependencies {
 
     compileOnly("org.springframework.boot:spring-boot-autoconfigure")
     implementation("io.lettuce:lettuce-core:${lettuceVersion}")
-    implementation("com.alicp.jetcache:jetcache-anno:${jetcacheVersion}") {
+    compileOnly("com.alicp.jetcache:jetcache-anno:${jetcacheVersion}") {
         exclude group: 'org.springframework'
         exclude group: 'org.springframework.boot'
     }
-    implementation("com.alicp.jetcache:jetcache-redis-lettuce:${jetcacheVersion}") {
+    compileOnly("com.alicp.jetcache:jetcache-redis-lettuce:${jetcacheVersion}") {
         exclude group: 'io.lettuce'
         exclude group: 'org.springframework'
         exclude group: 'org.springframework.boot'

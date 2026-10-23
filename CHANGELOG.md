@@ -2,6 +2,20 @@
 
 本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.3] - 2026-10-23
+
+### 破坏性变更
+
+- jetcache-plus 各模块不再传递 JetCache 依赖：`jetcache-anno`、`jetcache-anno-api`、`jetcache-redis-lettuce` 等由 `implementation` 改为 `compileOnly`，发布 POM 和 Gradle Module Metadata 中不再包含 `com.alicp.jetcache`。
+- 使用方**必须同时引入 JetCache（2.7.x）及其 starter** 才能工作，例如 `jetcache-starter-redis-lettuce`；只引入 jetcache-plus 会在运行时报 `NoClassDefFoundError`。
+- JetCache 版本完全由使用方决定，jetcache-plus 不再强制升级到 2.7.9。
+
+### 说明
+
+- JetCache 2.7.9 的 `jetcache-anno` / `jetcache-autoconfigure` 会传递 Spring Framework 6.2.18 / Spring Boot 3.5.14。使用 Spring Boot 3.2.x / Spring Cloud 2023.0.1 时，请在应用侧对 JetCache 依赖排除 `org.springframework`、`org.springframework.boot`，让 Spring 版本继续由 Spring Boot 管理。
+- 示例项目改用 JetCache 2.7.7，验证 jetcache-plus 在 2.7.7 下的运行兼容性；使用方仍可自行选择 2.7.x 的其他版本。
+- README 已补充必须自行引入 JetCache 的依赖说明和排除示例。
+
 ## [1.0.2] - 2026-10-23
 
 ### 修复
@@ -43,3 +57,4 @@
 
 [1.0.1]: https://github.com/qy8502/jetcache-plus/compare/v1.0.0...v1.0.1
 [1.0.2]: https://github.com/qy8502/jetcache-plus/compare/v1.0.1...v1.0.2
+[1.0.3]: https://github.com/qy8502/jetcache-plus/compare/v1.0.2...v1.0.3
